@@ -28,25 +28,21 @@
                         <t t-set='pedido_line'
                            t-value="request.env['sale.order'].search([('name','=',picking_line.origin)])"/>
 
-                        <div class="col-xs-3" style=" line-height:6pt;">
+                        <div class="col-xs-4" style=" line-height:6pt;">
                             <span style=" line-height:6pt;">
                                 <strong>
-                                    Albarán:
+                                    Alb:
                                 </strong>
                                 <t t-set='picking_origin'
                                    t-value="l.origin.split(':')[0] or l.origin" />
-                                <span t-esc="picking_origin"/>
-                            </span>
-                        </div>
-
-                        <div class="col-xs-3" style=" line-height:6pt;">
-                            <span>
-                                <strong>Fecha:</strong>
+                                <span t-esc="picking_origin"/> -
                                 <span t-field="picking_line.date" t-field-options='{"format": "dd/MM/yyyy"}'/>
                             </span>
                         </div>
 
-                        <div class="col-xs-6" style=" line-height:6pt;">
+
+
+                        <div class="col-xs-8" style=" line-height:9pt;">
                             <span>
                                 <strong>
                                     Referencia:
