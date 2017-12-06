@@ -17,7 +17,7 @@
         'account',
         'stock',
         'sale',
-        'account_payment_partner' #Repositorio bank-payment de OCA
+        #'account_payment_partner' #Repositorio bank-payment de OCA
     ],  # es una lista porque puede depender de mas de uno
     # Datos que siempre carga
     'data': [
