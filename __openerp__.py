@@ -10,7 +10,7 @@
     'website': "http://odoo.acelerem.com",
     # Category se usa com filtro para la lista de modulos
     'category': 'Account',
-    'version': '8.0.0.1.3',
+    'version': '8.0.0.1.4',
     'license': 'AGPL-3',
     # Depends indica los modulos necesarios para el correcto trabajo de nuestro modulo
     'depends': [
