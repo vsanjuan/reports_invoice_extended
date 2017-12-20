@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import models, api, fields, _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DFT
+from datetime import datetime
 
 
 class AccountInvoice(models.Model):
@@ -24,13 +26,33 @@ class AccountInvoice(models.Model):
         return res
 
     @api.one
-    def get_client_ref(self):
+    def get_origin(self, origin, condition):
         so_obj = self.env['sale.order']
-        if self.origin:
-            origin = so_obj.search([
-                ('name', '=', self.origin)
+        picking_obj = self.env['stock.picking']
+        sale = False
+        if origin:
+            # Search origin in Sales order
+            sale = so_obj.search([
+                ('name', '=', origin)
             ])
-            return origin.client_order_ref
+            if not sale:
+                # Search origin in Stock Picking
+                picking = picking_obj.search([
+                    ('name', '=', origin)
+                ])
+                if picking:
+                    # Search origin in Sales order
+                    sale = so_obj.search([
+                        ('name', '=', picking.origin)
+                    ])
+        if sale:
+            if condition == 'origin':
+                return sale.name
+            elif condition == 'client_ref':
+                return sale.client_order_ref
+            elif condition == 'so_date':
+                date = datetime.strptime(sale.date_order, DFT)
+                return date.strftime("%d/%m/%Y")
         return False
 
     @api.one

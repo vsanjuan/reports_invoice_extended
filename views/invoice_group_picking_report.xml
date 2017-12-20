@@ -16,44 +16,35 @@
         <t t-set='subtotal_alb' t-value="0" />
         <t t-set="lineas_alb" t-value="0" />
 
-        <t t-foreach="o.invoice_line" t-as="l">
+        <t t-foreach="o.invoice_line.sorted(key=lambda b: b.origin)" t-as="l">
             <t t-set='picking_name' t-value="l.origin or False" />
             <t t-set='subtotal_alb' t-value="subtotal_alb+l.price_subtotal" />
 
             <t t-if="l.origin and picking_name != last_picking_name">
                 <tr>
                     <td colspan="6">
-                        <t t-set='picking_line'
-                           t-value="request.env['stock.picking'].search([('name','=',list(l.origin.split(','))[0])]) or request.env['stock.picking'].search([('name','=',list(l.origin.split(':'))[0])])"/>
-                        <t t-set='pedido_line'
-                           t-value="request.env['sale.order'].search([('name','=',picking_line.origin)])"/>
-
+                        <t t-set="origin" t-value="o.get_origin(l.origin, 'origin')"/>
+                        <t t-set="pedido_line" t-value="o.get_origin(l.origin, 'client_ref')"/>
+                        <t t-set="so" t-value="o.get_origin(l.origin, 'so_date')"/>
                         <div class="col-xs-4" style=" line-height:6pt;">
                             <span style=" line-height:6pt;">
                                 <strong>
                                     Alb:
                                 </strong>
-                                <t t-set='picking_origin'
-                                   t-value="l.origin.split(':')[0] or l.origin" />
-                                <span t-esc="picking_origin"/> -
-                                <span t-field="picking_line.date" t-field-options='{"format": "dd/MM/yyyy"}'/>
+                                <span t-esc="origin and origin[0]"/>-
+                                <span t-esc="so and so[0]"/>
                             </span>
                         </div>
-
-
-
                         <div class="col-xs-8" style=" line-height:9pt;">
                             <span>
                                 <strong>
                                     Referencia:
                                 </strong>
-                                <span t-field="pedido_line.client_order_ref"/>
+                                <span t-esc="pedido_line[0]"/>
                             </span>
                         </div>
                     </td>
                 </tr>
-
-
             </t>
 
             <tr style=" font-size: 8pt;">
@@ -68,16 +59,8 @@
                 <td class="text-right">
                     <span t-field="l.price_subtotal" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
                 </td>
-
-
             </tr>
-
             <t t-set='last_picking_name' t-value="l.origin or False" />
-
-
-
-
-
         </t>
 
     </xpath>
